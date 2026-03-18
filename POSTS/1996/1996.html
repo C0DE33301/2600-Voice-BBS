@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio File Player</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the track list item hover effect */
+        .track-item:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 font-sans">
+    <div class="max-w-3xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="mb-8">
+            <!-- Updated and Centered Title -->
+            <h1 class="text-3xl font-extrabold text-indigo-700 border-b-4 border-indigo-200 pb-2 mb-2 text-center">
+                2600 Voice BBS - 1996
+            </h1>
+            <p class="text-gray-500 text-center">Click any file below to load and play it in the audio player.</p>
+        </header>
+
+        <!-- Dynamic Audio Player Section -->
+        <section class="mb-10 bg-indigo-50 p-4 rounded-lg border border-indigo-200 shadow-inner">
+            <h2 id="current-track-title" class="text-xl font-semibold text-indigo-800 mb-3 truncate">
+                Ready to play...
+            </h2>
+            <audio id="audio-player" controls class="w-full rounded-lg shadow-md" preload="auto">
+                Your browser does not support the audio element.
+            </audio>
+            <!-- Optional feedback message -->
+            <div id="feedback-message" class="text-sm text-red-600 mt-2 hidden">
+                Note: MP3 files must be hosted/available at the same location as this page to load correctly.
+            </div>
+        </section>
+
+        <!-- File List Section -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Available Files</h2>
+            <ul id="track-list" class="space-y-3">
+                <!-- Track items will be dynamically added here by JavaScript -->
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // Array of tracks based on the file names provided by the user
+        const tracks = [
+            // Titles are now just the file names, without the prefix "Track"
+{ file: 'M90.mp3', title: 'M90.mp3' },
+{ file: 'M103.mp3', title: 'M103.mp3' },
+{ file: 'M104.mp3', title: 'M104.mp3' },
+{ file: 'M174.mp3', title: 'M174.mp3' },
+{ file: 'M236.mp3', title: 'M236.mp3' },
+{ file: 'M279.mp3', title: 'M279.mp3' },
+{ file: 'M285.mp3', title: 'M285.mp3' },
+{ file: 'M438.mp3', title: 'M438.mp3' },
+{ file: 'M472.mp3', title: 'M472.mp3' },
+{ file: 'M476.mp3', title: 'M476.mp3' },
+{ file: 'M480.mp3', title: 'M480.mp3' },
+{ file: 'M505.mp3', title: 'M505.mp3' },
+{ file: 'M580.mp3', title: 'M580.mp3' },
+{ file: 'M606.mp3', title: 'M606.mp3' },
+{ file: 'M623.mp3', title: 'M623.mp3' },
+{ file: 'M625.mp3', title: 'M625.mp3' },
+{ file: 'M648.mp3', title: 'M648.mp3' },
+{ file: 'M740.mp3', title: 'M740.mp3' },
+{ file: 'M746.mp3', title: 'M746.mp3' },
+{ file: 'M780.mp3', title: 'M780.mp3' },
+{ file: 'M781.mp3', title: 'M781.mp3' },
+{ file: 'M815.mp3', title: 'M815.mp3' },
+{ file: 'M820.mp3', title: 'M820.mp3' },
+{ file: 'M839.mp3', title: 'M839.mp3' },
+{ file: 'M846.mp3', title: 'M846.mp3' },
+{ file: 'M869.mp3', title: 'M869.mp3' },
+{ file: 'M877.mp3', title: 'M877.mp3' },
+{ file: 'M899.mp3', title: 'M899.mp3' },
+{ file: 'M904.mp3', title: 'M904.mp3' },
+{ file: 'M998.mp3', title: 'M998.mp3' },
+{ file: 'M1018.mp3', title: 'M1018.mp3' },
+{ file: 'M1023.mp3', title: 'M1023.mp3' },
+{ file: 'M1092.mp3', title: 'M1092.mp3' },
+{ file: 'M1136.mp3', title: 'M1136.mp3' },
+{ file: 'M1182.mp3', title: 'M1182.mp3' },
+{ file: 'M1272.mp3', title: 'M1272.mp3' },
+{ file: 'M1339.mp3', title: 'M1339.mp3' },
+{ file: 'M1426.mp3', title: 'M1426.mp3' },
+{ file: 'M1492.mp3', title: 'M1492.mp3' },
+{ file: 'M1628.mp3', title: 'M1628.mp3' },
+{ file: 'M1642.mp3', title: 'M1642.mp3' },
+{ file: 'M1648.mp3', title: 'M1648.mp3' },
+{ file: 'M1660.mp3', title: 'M1660.mp3' },
+{ file: 'M1686.mp3', title: 'M1686.mp3' },
+{ file: 'M1688.mp3', title: 'M1688.mp3' },
+{ file: 'M1699.mp3', title: 'M1699.mp3' },
+{ file: 'M1708.mp3', title: 'M1708.mp3' },
+{ file: 'M1709.mp3', title: 'M1709.mp3' },
+{ file: 'M1710.mp3', title: 'M1710.mp3' },
+{ file: 'M1711.mp3', title: 'M1711.mp3' },
+{ file: 'M1715.mp3', title: 'M1715.mp3' },
+{ file: 'M1717.mp3', title: 'M1717.mp3' },
+{ file: 'M1719.mp3', title: 'M1719.mp3' },
+{ file: 'M1720.mp3', title: 'M1720.mp3' },
+{ file: 'M1721.mp3', title: 'M1721.mp3' },
+{ file: 'M1722.mp3', title: 'M1722.mp3' },
+{ file: 'M1723.mp3', title: 'M1723.mp3' },
+{ file: 'M1724.mp3', title: 'M1724.mp3' },
+{ file: 'M1725.mp3', title: 'M1725.mp3' },
+{ file: 'M1728.mp3', title: 'M1728.mp3' },
+{ file: 'M1729.mp3', title: 'M1729.mp3' },
+{ file: 'M1730.mp3', title: 'M1730.mp3' },
+{ file: 'M1731.mp3', title: 'M1731.mp3' },
+{ file: 'M1732.mp3', title: 'M1732.mp3' },
+{ file: 'M1733.mp3', title: 'M1733.mp3' },
+{ file: 'M1742.mp3', title: 'M1742.mp3' },
+{ file: 'M1744.mp3', title: 'M1744.mp3' },
+{ file: 'M1745.mp3', title: 'M1745.mp3' },
+{ file: 'M1746.mp3', title: 'M1746.mp3' },
+{ file: 'M1750.mp3', title: 'M1750.mp3' },
+{ file: 'M1751.mp3', title: 'M1751.mp3' },
+{ file: 'M1752.mp3', title: 'M1752.mp3' },
+{ file: 'M1753.mp3', title: 'M1753.mp3' },
+{ file: 'M1756.mp3', title: 'M1756.mp3' },
+{ file: 'M1760.mp3', title: 'M1760.mp3' },
+{ file: 'M1761.mp3', title: 'M1761.mp3' },
+{ file: 'M1762.mp3', title: 'M1762.mp3' },
+{ file: 'M1765.mp3', title: 'M1765.mp3' },
+{ file: 'M1767.mp3', title: 'M1767.mp3' },
+{ file: 'M1768.mp3', title: 'M1768.mp3' },
+{ file: 'M1771.mp3', title: 'M1771.mp3' },
+{ file: 'M1772.mp3', title: 'M1772.mp3' },
+{ file: 'M1773.mp3', title: 'M1773.mp3' },
+{ file: 'M1776.mp3', title: 'M1776.mp3' },
+{ file: 'M1777.mp3', title: 'M1777.mp3' },
+{ file: 'M1787.mp3', title: 'M1787.mp3' },
+{ file: 'M1789.mp3', title: 'M1789.mp3' },
+{ file: 'M1790.mp3', title: 'M1790.mp3' },
+{ file: 'M1792.mp3', title: 'M1792.mp3' },
+{ file: 'M1793.mp3', title: 'M1793.mp3' },
+{ file: 'M1795.mp3', title: 'M1795.mp3' },
+{ file: 'M1796.mp3', title: 'M1796.mp3' },
+{ file: 'M1798.mp3', title: 'M1798.mp3' },
+{ file: 'M1800.mp3', title: 'M1800.mp3' },
+{ file: 'M1802.mp3', title: 'M1802.mp3' },
+{ file: 'M1804.mp3', title: 'M1804.mp3' },
+{ file: 'M1810.mp3', title: 'M1810.mp3' },
+{ file: 'M1812.mp3', title: 'M1812.mp3' },
+{ file: 'M1813.mp3', title: 'M1813.mp3' },
+{ file: 'M1817.mp3', title: 'M1817.mp3' },
+{ file: 'M1818.mp3', title: 'M1818.mp3' },
+{ file: 'M1819.mp3', title: 'M1819.mp3' },
+{ file: 'M1822.mp3', title: 'M1822.mp3' },
+{ file: 'M1824.mp3', title: 'M1824.mp3' },
+{ file: 'M1825.mp3', title: 'M1825.mp3' },
+{ file: 'M1826.mp3', title: 'M1826.mp3' },
+{ file: 'M1827.mp3', title: 'M1827.mp3' },
+{ file: 'M1830.mp3', title: 'M1830.mp3' },
+{ file: 'M1833.mp3', title: 'M1833.mp3' },
+{ file: 'M1837.mp3', title: 'M1837.mp3' },
+{ file: 'M1840.mp3', title: 'M1840.mp3' },
+{ file: 'M1842.mp3', title: 'M1842.mp3' },
+{ file: 'M1849.mp3', title: 'M1849.mp3' },
+{ file: 'M1850.mp3', title: 'M1850.mp3' },
+{ file: 'M1851.mp3', title: 'M1851.mp3' },
+{ file: 'M1852.mp3', title: 'M1852.mp3' },
+{ file: 'M1853.mp3', title: 'M1853.mp3' },
+{ file: 'M1856.mp3', title: 'M1856.mp3' },
+{ file: 'M1862.mp3', title: 'M1862.mp3' },
+{ file: 'M1867.mp3', title: 'M1867.mp3' },
+{ file: 'M1869.mp3', title: 'M1869.mp3' },
+{ file: 'M1870.mp3', title: 'M1870.mp3' },
+{ file: 'M1871.mp3', title: 'M1871.mp3' },
+{ file: 'M1872.mp3', title: 'M1872.mp3' },
+{ file: 'M1873.mp3', title: 'M1873.mp3' },
+{ file: 'M1874.mp3', title: 'M1874.mp3' },
+{ file: 'M1876.mp3', title: 'M1876.mp3' },
+{ file: 'M1877.mp3', title: 'M1877.mp3' },
+{ file: 'M1881.mp3', title: 'M1881.mp3' },
+{ file: 'M1882.mp3', title: 'M1882.mp3' },
+{ file: 'M1883.mp3', title: 'M1883.mp3' },
+{ file: 'M1884.mp3', title: 'M1884.mp3' },
+{ file: 'M1886.mp3', title: 'M1886.mp3' },
+{ file: 'M1887.mp3', title: 'M1887.mp3' },
+{ file: 'M1890.mp3', title: 'M1890.mp3' },
+{ file: 'M1891.mp3', title: 'M1891.mp3' },
+{ file: 'M1892.mp3', title: 'M1892.mp3' },
+{ file: 'M1900.mp3', title: 'M1900.mp3' },
+{ file: 'M1908.mp3', title: 'M1908.mp3' },
+{ file: 'M1909.mp3', title: 'M1909.mp3' },
+{ file: 'M1910.mp3', title: 'M1910.mp3' },
+{ file: 'M1912.mp3', title: 'M1912.mp3' },
+{ file: 'M1913.mp3', title: 'M1913.mp3' },
+{ file: 'M1914.mp3', title: 'M1914.mp3' },
+{ file: 'M1916.mp3', title: 'M1916.mp3' },
+{ file: 'M1917.mp3', title: 'M1917.mp3' },
+{ file: 'M1920.mp3', title: 'M1920.mp3' },
+{ file: 'M1925.mp3', title: 'M1925.mp3' },
+{ file: 'M1929.mp3', title: 'M1929.mp3' },
+{ file: 'M1930.mp3', title: 'M1930.mp3' },
+{ file: 'M1933.mp3', title: 'M1933.mp3' },
+{ file: 'M1934.mp3', title: 'M1934.mp3' },
+{ file: 'M1941.mp3', title: 'M1941.mp3' },
+{ file: 'M1942.mp3', title: 'M1942.mp3' },
+{ file: 'M1943.mp3', title: 'M1943.mp3' },
+{ file: 'M1944.mp3', title: 'M1944.mp3' },
+{ file: 'M1946.mp3', title: 'M1946.mp3' },
+{ file: 'M1947.mp3', title: 'M1947.mp3' },
+{ file: 'M1951.mp3', title: 'M1951.mp3' },
+{ file: 'M1956.mp3', title: 'M1956.mp3' },
+{ file: 'M1958.mp3', title: 'M1958.mp3' },
+{ file: 'M1959.mp3', title: 'M1959.mp3' },
+{ file: 'M1963.mp3', title: 'M1963.mp3' },
+{ file: 'M1971.mp3', title: 'M1971.mp3' },
+{ file: 'M1972.mp3', title: 'M1972.mp3' },
+{ file: 'M1973.mp3', title: 'M1973.mp3' },
+{ file: 'M1978.mp3', title: 'M1978.mp3' },
+{ file: 'M1981.mp3', title: 'M1981.mp3' },
+{ file: 'M1982.mp3', title: 'M1982.mp3' },
+{ file: 'M1983.mp3', title: 'M1983.mp3' },
+{ file: 'M1987.mp3', title: 'M1987.mp3' },
+{ file: 'M1989.mp3', title: 'M1989.mp3' },
+{ file: 'M1991.mp3', title: 'M1991.mp3' },
+{ file: 'M1993.mp3', title: 'M1993.mp3' },
+{ file: 'M1996.mp3', title: 'M1996.mp3' },
+{ file: 'M1999.mp3', title: 'M1999.mp3' },
+{ file: 'M2004.mp3', title: 'M2004.mp3' },
+{ file: 'M2005.mp3', title: 'M2005.mp3' },
+{ file: 'M2006.mp3', title: 'M2006.mp3' },
+{ file: 'M2008.mp3', title: 'M2008.mp3' },
+{ file: 'M2010.mp3', title: 'M2010.mp3' },
+{ file: 'M2011.mp3', title: 'M2011.mp3' },
+{ file: 'M2012.mp3', title: 'M2012.mp3' },
+{ file: 'M2013.mp3', title: 'M2013.mp3' },
+{ file: 'M2014.mp3', title: 'M2014.mp3' },
+{ file: 'M2015.mp3', title: 'M2015.mp3' },
+{ file: 'M2016.mp3', title: 'M2016.mp3' },
+{ file: 'M2017.mp3', title: 'M2017.mp3' },
+{ file: 'M2018.mp3', title: 'M2018.mp3' },
+{ file: 'M2019.mp3', title: 'M2019.mp3' },
+{ file: 'M2020.mp3', title: 'M2020.mp3' },
+{ file: 'M2021.mp3', title: 'M2021.mp3' },
+{ file: 'M2026.mp3', title: 'M2026.mp3' },
+{ file: 'M2028.mp3', title: 'M2028.mp3' },
+{ file: 'M2029.mp3', title: 'M2029.mp3' },
+{ file: 'M2030.mp3', title: 'M2030.mp3' },
+{ file: 'M2038.mp3', title: 'M2038.mp3' },
+{ file: 'M2039.mp3', title: 'M2039.mp3' },
+{ file: 'M2040.mp3', title: 'M2040.mp3' },
+{ file: 'M2041.mp3', title: 'M2041.mp3' },
+{ file: 'M2043.mp3', title: 'M2043.mp3' },
+{ file: 'M2065.mp3', title: 'M2065.mp3' },
+{ file: 'M2091.mp3', title: 'M2091.mp3' },
+{ file: 'M2098.mp3', title: 'M2098.mp3' },
+{ file: 'M2099.mp3', title: 'M2099.mp3' },
+{ file: 'M2100.mp3', title: 'M2100.mp3' },
+{ file: 'M2102.mp3', title: 'M2102.mp3' },
+{ file: 'M2104.mp3', title: 'M2104.mp3' },
+{ file: 'M2114.mp3', title: 'M2114.mp3' },
+{ file: 'M2115.mp3', title: 'M2115.mp3' },
+{ file: 'M2135.mp3', title: 'M2135.mp3' },
+{ file: 'M2136.mp3', title: 'M2136.mp3' },
+{ file: 'M2208.mp3', title: 'M2208.mp3' },
+{ file: 'M2245.mp3', title: 'M2245.mp3' },
+{ file: 'M2262.mp3', title: 'M2262.mp3' },
+{ file: 'M2278.mp3', title: 'M2278.mp3' },
+{ file: 'M2284.mp3', title: 'M2284.mp3' },
+{ file: 'M2309.mp3', title: 'M2309.mp3' },
+{ file: 'M2348.mp3', title: 'M2348.mp3' },
+{ file: 'M2353.mp3', title: 'M2353.mp3' },
+{ file: 'M2382.mp3', title: 'M2382.mp3' },
+{ file: 'M2444.mp3', title: 'M2444.mp3' },
+{ file: 'M2450.mp3', title: 'M2450.mp3' },
+{ file: 'M2460.mp3', title: 'M2460.mp3' },
+{ file: 'M2470.mp3', title: 'M2470.mp3' },
+{ file: 'M2476.mp3', title: 'M2476.mp3' },
+{ file: 'M2501.mp3', title: 'M2501.mp3' },
+{ file: 'M2506.mp3', title: 'M2506.mp3' },
+{ file: 'M2576.mp3', title: 'M2576.mp3' },
+{ file: 'M2582.mp3', title: 'M2582.mp3' },
+{ file: 'M2584.mp3', title: 'M2584.mp3' },
+{ file: 'M2585.mp3', title: 'M2585.mp3' },
+{ file: 'M2586.mp3', title: 'M2586.mp3' },
+{ file: 'M2603.mp3', title: 'M2603.mp3' },
+{ file: 'M2605.mp3', title: 'M2605.mp3' },
+{ file: 'M2613.mp3', title: 'M2613.mp3' }
+        ];
+
+        const audioPlayer = document.getElementById('audio-player');
+        const trackList = document.getElementById('track-list');
+        const currentTrackTitle = document.getElementById('current-track-title');
+
+        /**
+         * Loads a track into the audio player and attempts to play it.
+         * @param {string} file - The filename (URL) of the MP3.
+         * @param {string} title - The display title of the track.
+         */
+        function loadTrack(file, title) {
+            audioPlayer.src = file;
+            currentTrackTitle.textContent = `Now Playing: ${title}`;
+            
+            // Attempt to play the audio. This might be blocked by browser policies
+            // (e.g., no autoplay before user interaction).
+            audioPlayer.play().catch(error => {
+                console.error("Autoplay failed:", error);
+                // If autoplay fails, the user will still see the controls to press play.
+                currentTrackTitle.textContent = `Loaded: ${title} (Click Play Above)`;
+            });
+        }
+
+        /**
+         * Renders the list of tracks to the DOM.
+         */
+        function renderTrackList() {
+            // Clear any previous list items (useful if this function was called multiple times)
+            trackList.innerHTML = '';
+            
+            tracks.forEach(track => {
+                const listItem = document.createElement('li');
+                // Tailwind classes for styling, responsiveness, and hover effect
+                listItem.className = 'track-item cursor-pointer bg-gray-50 p-4 rounded-lg flex justify-between items-center transition duration-200 ease-in-out hover:bg-indigo-100 hover:shadow-md';
+                
+                // Set the list item content
+                listItem.innerHTML = `
+                    <span class="text-lg font-medium text-gray-700 truncate pr-4">${track.title}</span>
+                    <!-- Removed the redundant file name span since title is now the file name -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500 flex-shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75v4.5m-4.5-4.5v4.5m8.25-2.25l-1.5-.75L12 9l2.25-1.5 1.5.75L18 10.5l-2.25 1.5z" />
+                    </svg>
+                `;
+                
+                // Add the click listener to load and play the track
+                listItem.addEventListener('click', () => loadTrack(track.file, track.title));
+                
+                trackList.appendChild(listItem);
+            });
+
+            // Set a default state message when the list is rendered
+            currentTrackTitle.textContent = `Available Files: ${tracks.length}`;
+        }
+
+        // Initialize the list when the page finishes loading
+        window.onload = renderTrackList;
+
+    </script>
+</body>
+</html>

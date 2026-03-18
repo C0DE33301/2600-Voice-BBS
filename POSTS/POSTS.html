@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2600 VOICE BBS</title>
+    <!-- Load Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS for the CRT Effect -->
+    <style>
+        /* Base CRT colors and font */
+        :root {
+            --color-primary: #00ff41; /* Bright green text */
+            --color-shadow: rgba(0, 255, 65, 0.7); /* Green shadow/glow */
+            --bg-color: #000000; /* Black background */
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--color-primary);
+            font-family: 'Courier New', Courier, monospace;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Text Glow Effect */
+        .crt-text {
+            text-shadow: 0 0 5px var(--color-shadow), 
+                         0 0 10px var(--color-shadow);
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        /* Scanline Overlay (Visual Noise) */
+        .crt-screen::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: 
+                repeating-linear-gradient(
+                    to bottom, 
+                    transparent 0, 
+                    transparent 1px, 
+                    rgba(0, 0, 0, 0.3) 2px, 
+                    rgba(0, 0, 0, 0.4) 3px
+                );
+            opacity: 0.2;
+            z-index: 10;
+        }
+
+        /* Subtle screen flicker animation */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.98; }
+        }
+
+        /* Link Styling */
+        a {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            transition: color 0.1s;
+        }
+
+        a:hover {
+            color: #ffffff; /* Brighter white/light green on hover */
+            text-shadow: 0 0 15px var(--color-primary);
+        }
+        
+        /* Ensures the container respects flex layout */
+        .content-container {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body class="crt-screen">
+    
+    <!-- Main Content Container -->
+    <div class="content-container w-full max-w-4xl mx-auto pt-8">
+        
+        <!-- Header: 2600 VOICE BBS -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl md:text-6xl font-extrabold crt-text">
+                2600 VOICE BBS
+            </h1>
+        </header>
+
+        <!-- Main Link Menu -->
+        <main class="text-left mx-auto max-w-xl p-4 md:p-8 rounded-lg border border-opacity-30 border-green-500">
+            <h2 class="text-3xl mb-6 crt-text">**POSTS MENU**</h2>
+            
+            <nav class="flex flex-col text-2xl crt-text">
+			<span class="mb-4">
+                <span class="text-gray-500">>>></span> 
+                    <a href="./1996/1996.html">VOICE BBS POSTS 1996</a> 
+                </span>
+                
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./1997/1997.html">VOICE BBS POSTS 1997</a> 
+                </span>
+                
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./1998/1998.html">VOICE BBS POSTS 1998</a> 
+                </span>
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./1999/1999.html">VOICE BBS POSTS 1999</a> 
+                </span>
+                
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./2000/2000.html">VOICE BBS POSTS 2000</a> 
+                </span>
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./2001/2001.html">VOICE BBS POSTS 2001</a> 
+                </span>
+                
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./2002/2002.html">VOICE BBS POSTS 2002</a> 
+                </span>
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./2003/2003.html">VOICE BBS POSTS 2003</a> 
+                </span>
+                
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./2004/2004.html">VOICE BBS POSTS 2004</a> 
+                </span>
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./2005/2005.html">VOICE BBS POSTS 2005</a>
+                </span>
+                <!-- NEW TEXT INSERTION POINT -->
+                <div class="text-lg text-yellow-400 mb-4 ml-6 pl-2 pr-2 italic border-l-4 border-yellow-700">
+                    <p>
+                        We have eliminated most of the hangups and silent posts, unless there was a sound or some background speech that someone might find interesting. We also took out any posts that had doxxing or overt racism, which fortunately weren't too many.
+<br><br>There were two main boards - one moderated and one unmoderated. They are mixed together here as there was nothing to designate which was which. There are also posts in the first two years from the Beyond HOPE board, which was created for planning of the second HOPE conference.
+<br><br>Most of the posting took place before 2000, but people continued calling right up to the end. We're sorry for the stupidity of 1999, but if you want to relive the experience, you need to feel the pain we all felt.
+                    </p>
+                </div>
+                <!-- END OF NEW TEXT -->
+            </nav>
+            
+            <p class="mt-8 text-xl text-gray-400 crt-text">
+                System Time: <span id="current-time"></span>
+            </p>
+        </main>
+        
+    </div>
+
+    <!-- Footer: All Rights Reserved -->
+    <footer class="text-center text-xs mt-12 mb-4 text-gray-500 crt-text">
+        2600 Voice BBS - All Rights Reserved
+    </footer>
+
+    <!-- Simple JavaScript for dynamic time, adding to the retro feel -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timeElement = document.getElementById('current-time');
+            
+            function updateTime() {
+                const now = new Date();
+                timeElement.textContent = now.toLocaleString('en-US', {
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit', 
+                    year: 'numeric', 
+                    month: '2-digit', 
+                    day: '2-digit', 
+                    hour12: false
+                }).replace(',', ' @');
+            }
+            
+            updateTime();
+            // Update every second
+            setInterval(updateTime, 1000); 
+        });
+    </script>
+</body>
+    <!-- Footer: All Rights Reserved -->
+    <footer class="text-center text-xs mt-12 mb-4 text-gray-500 crt-text">
+        This <a href="./2002/af.html">Link</a> For Authorized Users Only
+    </footer>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio File Player</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the track list item hover effect */
+        .track-item:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 font-sans">
+    <div class="max-w-3xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="mb-8">
+            <!-- Updated and Centered Title -->
+            <h1 class="text-3xl font-extrabold text-indigo-700 border-b-4 border-indigo-200 pb-2 mb-2 text-center">
+                2600 Voice BBS - 2001
+            </h1>
+            <p class="text-gray-500 text-center">Click any file below to load and play it in the audio player.</p>
+        </header>
+
+        <!-- Dynamic Audio Player Section -->
+        <section class="mb-10 bg-indigo-50 p-4 rounded-lg border border-indigo-200 shadow-inner">
+            <h2 id="current-track-title" class="text-xl font-semibold text-indigo-800 mb-3 truncate">
+                Ready to play...
+            </h2>
+            <audio id="audio-player" controls class="w-full rounded-lg shadow-md" preload="auto">
+                Your browser does not support the audio element.
+            </audio>
+            <!-- Optional feedback message -->
+            <div id="feedback-message" class="text-sm text-red-600 mt-2 hidden">
+                Note: MP3 files must be hosted/available at the same location as this page to load correctly.
+            </div>
+        </section>
+
+        <!-- File List Section -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Available Files</h2>
+            <ul id="track-list" class="space-y-3">
+                <!-- Track items will be dynamically added here by JavaScript -->
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // Array of tracks based on the file names provided by the user
+        const tracks = [
+            // Titles are now just the file names, without the prefix "Track"
+{ file: 'M12526.mp3', title: 'M12526.mp3' },
+{ file: 'M12532.mp3', title: 'M12532.mp3' },
+{ file: 'M12536.mp3', title: 'M12536.mp3' },
+{ file: 'M12537.mp3', title: 'M12537.mp3' },
+{ file: 'M12538.mp3', title: 'M12538.mp3' },
+{ file: 'M12551.mp3', title: 'M12551.mp3' },
+{ file: 'M12554.mp3', title: 'M12554.mp3' },
+{ file: 'M12556.mp3', title: 'M12556.mp3' },
+{ file: 'M12559.mp3', title: 'M12559.mp3' },
+{ file: 'M12567.mp3', title: 'M12567.mp3' },
+{ file: 'M12591.mp3', title: 'M12591.mp3' },
+{ file: 'M12597.mp3', title: 'M12597.mp3' },
+{ file: 'M12602.mp3', title: 'M12602.mp3' },
+{ file: 'M12609.mp3', title: 'M12609.mp3' },
+{ file: 'M12610.mp3', title: 'M12610.mp3' },
+{ file: 'M12615.mp3', title: 'M12615.mp3' },
+{ file: 'M12617.mp3', title: 'M12617.mp3' },
+{ file: 'M12620.mp3', title: 'M12620.mp3' },
+{ file: 'M12621.mp3', title: 'M12621.mp3' },
+{ file: 'M12631.mp3', title: 'M12631.mp3' },
+{ file: 'M12649.mp3', title: 'M12649.mp3' },
+{ file: 'M12673.mp3', title: 'M12673.mp3' },
+{ file: 'M12678.mp3', title: 'M12678.mp3' },
+{ file: 'M12683.mp3', title: 'M12683.mp3' },
+{ file: 'M12696.mp3', title: 'M12696.mp3' },
+{ file: 'M12700.mp3', title: 'M12700.mp3' },
+{ file: 'M12705.mp3', title: 'M12705.mp3' },
+{ file: 'M12710.mp3', title: 'M12710.mp3' },
+{ file: 'M12711.mp3', title: 'M12711.mp3' },
+{ file: 'M12725.mp3', title: 'M12725.mp3' },
+{ file: 'M12727.mp3', title: 'M12727.mp3' },
+{ file: 'M12733.mp3', title: 'M12733.mp3' },
+{ file: 'M12738.mp3', title: 'M12738.mp3' },
+{ file: 'M12742.mp3', title: 'M12742.mp3' },
+{ file: 'M12745.mp3', title: 'M12745.mp3' },
+{ file: 'M12750.mp3', title: 'M12750.mp3' },
+{ file: 'M12753.mp3', title: 'M12753.mp3' },
+{ file: 'M12757.mp3', title: 'M12757.mp3' },
+{ file: 'M12770.mp3', title: 'M12770.mp3' },
+{ file: 'M12771.mp3', title: 'M12771.mp3' },
+{ file: 'M12783.mp3', title: 'M12783.mp3' },
+{ file: 'M12784.mp3', title: 'M12784.mp3' },
+{ file: 'M12789.mp3', title: 'M12789.mp3' },
+{ file: 'M12791.mp3', title: 'M12791.mp3' },
+{ file: 'M12815.mp3', title: 'M12815.mp3' },
+{ file: 'M12824.mp3', title: 'M12824.mp3' },
+{ file: 'M12825.mp3', title: 'M12825.mp3' },
+{ file: 'M12834.mp3', title: 'M12834.mp3' },
+{ file: 'M12842.mp3', title: 'M12842.mp3' },
+{ file: 'M12843.mp3', title: 'M12843.mp3' },
+{ file: 'M12845.mp3', title: 'M12845.mp3' },
+{ file: 'M12846.mp3', title: 'M12846.mp3' },
+{ file: 'M12855.mp3', title: 'M12855.mp3' },
+{ file: 'M12860.mp3', title: 'M12860.mp3' },
+{ file: 'M12870.mp3', title: 'M12870.mp3' },
+{ file: 'M12871.mp3', title: 'M12871.mp3' },
+{ file: 'M12872.mp3', title: 'M12872.mp3' },
+{ file: 'M12877.mp3', title: 'M12877.mp3' },
+{ file: 'M12878.mp3', title: 'M12878.mp3' },
+{ file: 'M12879.mp3', title: 'M12879.mp3' },
+{ file: 'M12882.mp3', title: 'M12882.mp3' },
+{ file: 'M12887.mp3', title: 'M12887.mp3' },
+{ file: 'M12890.mp3', title: 'M12890.mp3' },
+{ file: 'M12892.mp3', title: 'M12892.mp3' },
+{ file: 'M12894.mp3', title: 'M12894.mp3' },
+{ file: 'M12895.mp3', title: 'M12895.mp3' },
+{ file: 'M12903.mp3', title: 'M12903.mp3' },
+{ file: 'M12906.mp3', title: 'M12906.mp3' },
+{ file: 'M12907.mp3', title: 'M12907.mp3' },
+{ file: 'M12908.mp3', title: 'M12908.mp3' },
+{ file: 'M12914.mp3', title: 'M12914.mp3' },
+{ file: 'M12919.mp3', title: 'M12919.mp3' },
+{ file: 'M12920.mp3', title: 'M12920.mp3' },
+{ file: 'M12922.mp3', title: 'M12922.mp3' },
+{ file: 'M12925.mp3', title: 'M12925.mp3' },
+{ file: 'M12927.mp3', title: 'M12927.mp3' },
+{ file: 'M12938.mp3', title: 'M12938.mp3' },
+{ file: 'M12944.mp3', title: 'M12944.mp3' },
+{ file: 'M12945.mp3', title: 'M12945.mp3' },
+        ];
+
+        const audioPlayer = document.getElementById('audio-player');
+        const trackList = document.getElementById('track-list');
+        const currentTrackTitle = document.getElementById('current-track-title');
+
+        /**
+         * Loads a track into the audio player and attempts to play it.
+         * @param {string} file - The filename (URL) of the MP3.
+         * @param {string} title - The display title of the track.
+         */
+        function loadTrack(file, title) {
+            audioPlayer.src = file;
+            currentTrackTitle.textContent = `Now Playing: ${title}`;
+            
+            // Attempt to play the audio. This might be blocked by browser policies
+            // (e.g., no autoplay before user interaction).
+            audioPlayer.play().catch(error => {
+                console.error("Autoplay failed:", error);
+                // If autoplay fails, the user will still see the controls to press play.
+                currentTrackTitle.textContent = `Loaded: ${title} (Click Play Above)`;
+            });
+        }
+
+        /**
+         * Renders the list of tracks to the DOM.
+         */
+        function renderTrackList() {
+            // Clear any previous list items (useful if this function was called multiple times)
+            trackList.innerHTML = '';
+            
+            tracks.forEach(track => {
+                const listItem = document.createElement('li');
+                // Tailwind classes for styling, responsiveness, and hover effect
+                listItem.className = 'track-item cursor-pointer bg-gray-50 p-4 rounded-lg flex justify-between items-center transition duration-200 ease-in-out hover:bg-indigo-100 hover:shadow-md';
+                
+                // Set the list item content
+                listItem.innerHTML = `
+                    <span class="text-lg font-medium text-gray-700 truncate pr-4">${track.title}</span>
+                    <!-- Removed the redundant file name span since title is now the file name -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500 flex-shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75v4.5m-4.5-4.5v4.5m8.25-2.25l-1.5-.75L12 9l2.25-1.5 1.5.75L18 10.5l-2.25 1.5z" />
+                    </svg>
+                `;
+                
+                // Add the click listener to load and play the track
+                listItem.addEventListener('click', () => loadTrack(track.file, track.title));
+                
+                trackList.appendChild(listItem);
+            });
+
+            // Set a default state message when the list is rendered
+            currentTrackTitle.textContent = `Available Files: ${tracks.length}`;
+        }
+
+        // Initialize the list when the page finishes loading
+        window.onload = renderTrackList;
+
+    </script>
+</body>
+</html>

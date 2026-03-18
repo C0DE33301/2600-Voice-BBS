@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2600 VOICE BBS</title>
+    <!-- Load Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS for the CRT Effect -->
+    <style>
+        /* Base CRT colors and font */
+        :root {
+            --color-primary: #00ff41; /* Bright green text */
+            --color-shadow: rgba(0, 255, 65, 0.7); /* Green shadow/glow */
+            --bg-color: #000000; /* Black background */
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--color-primary);
+            font-family: 'Courier New', Courier, monospace;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Text Glow Effect */
+        .crt-text {
+            text-shadow: 0 0 5px var(--color-shadow), 
+                         0 0 10px var(--color-shadow);
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        /* Scanline Overlay (Visual Noise) */
+        .crt-screen::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: 
+                repeating-linear-gradient(
+                    to bottom, 
+                    transparent 0, 
+                    transparent 1px, 
+                    rgba(0, 0, 0, 0.3) 2px, 
+                    rgba(0, 0, 0, 0.4) 3px
+                );
+            opacity: 0.2;
+            z-index: 10;
+        }
+
+        /* Subtle screen flicker animation */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.98; }
+        }
+
+        /* Link Styling */
+        a {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            transition: color 0.1s;
+        }
+
+        a:hover {
+            color: #ffffff; /* Brighter white/light green on hover */
+            text-shadow: 0 0 15px var(--color-primary);
+        }
+        
+        /* Ensures the container respects flex layout */
+        .content-container {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body class="crt-screen">
+    
+    <!-- Main Content Container -->
+    <div class="content-container w-full max-w-4xl mx-auto pt-8">
+        
+        <!-- Header: 2600 VOICE BBS -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl md:text-6xl font-extrabold crt-text">
+                2600 VOICE BBS
+            </h1>
+        </header>
+
+        <!-- Main Link Menu -->
+        <main class="text-left mx-auto max-w-xl p-4 md:p-8 rounded-lg border border-opacity-30 border-green-500">
+            <h2 class="text-3xl mb-6 crt-text">**MAIN MENU**</h2>
+            
+            <nav class="flex flex-col text-2xl crt-text">
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./PROMPTS-ETC/PROMPTS-ETC.html">VOICE BBS PROMPTS AND MORE</a> 
+                </span>
+                
+                <!-- NEW TEXT INSERTION POINT -->
+                <div class="text-lg text-yellow-400 mb-4 ml-6 pl-2 pr-2 italic border-l-4 border-yellow-700">
+                    <p>
+                        We had lots of fun recording voice prompts for every scenario on our system. They're all in here - some quite long and some very short. There's even a recording of an "Off The Hook" episode!
+                    </p>
+                </div>
+                <!-- END OF NEW TEXT -->
+			<span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./MEETINGS/MEETINGS.html">AUDIBLE 2600 MEETING LIST</a> 
+                </span>
+                <!-- NEW TEXT INSERTION POINT -->
+                <div class="text-lg text-yellow-400 mb-4 ml-6 pl-2 pr-2 italic border-l-4 border-yellow-700">
+                    <p>
+                        The 2600 Voice BBS had a feature where you could enter an area code and get the location of the nearest 2600 meeting! (We somehow made this work for overseas locations as well.) All of the old (circa 1990s) meeting locations are spoken here.
+                    </p>
+                </div>
+                <!-- END OF NEW TEXT -->
+                
+                <span class="mb-4">
+                    <span class="text-gray-500">>>></span> 
+                    <a href="./POSTS/POSTS.html">VOICE BBS POSTS (1996-2005)</a>
+                </span>
+                <!-- NEW TEXT INSERTION POINT -->
+                <div class="text-lg text-yellow-400 mb-4 ml-6 pl-2 pr-2 italic border-l-4 border-yellow-700">
+                    <p>
+                        Here you will find all of the surviving Voice BBS posts, starting in 1996 and ending in 2005. There is a lot of history here with voices you may remember or still possess. The intelligence level varies wildly so enjoy the ride. (This is divided by year to avoid losing your mind. Enjoy.)
+                    </p>
+                </div>
+                <!-- END OF NEW TEXT -->
+            </nav>
+            
+            <p class="mt-8 text-xl text-gray-400 crt-text">
+                System Time: <span id="current-time"></span>
+            </p>
+        </main>
+        
+    </div>
+
+    <!-- Footer: All Rights Reserved -->
+    <footer class="text-center text-xs mt-12 mb-4 text-gray-500 crt-text">
+        2600 Voice BBS - All Rights Reserved
+    </footer>
+
+    <!-- Simple JavaScript for dynamic time, adding to the retro feel -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timeElement = document.getElementById('current-time');
+            
+            function updateTime() {
+                const now = new Date();
+                timeElement.textContent = now.toLocaleString('en-US', {
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit', 
+                    year: 'numeric', 
+                    month: '2-digit', 
+                    day: '2-digit', 
+                    hour12: false
+                }).replace(',', ' @');
+            }
+            
+            updateTime();
+            // Update every second
+            setInterval(updateTime, 1000); 
+        });
+    </script>
+</body>
+</html>

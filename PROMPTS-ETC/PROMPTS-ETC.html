@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio File Player</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the track list item hover effect */
+        .track-item:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 font-sans">
+    <div class="max-w-3xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="mb-8">
+            <!-- Updated and Centered Title -->
+            <h1 class="text-3xl font-extrabold text-indigo-700 border-b-4 border-indigo-200 pb-2 mb-2 text-center">
+                2600 Voice BBS - PROMPTS, ETC.
+            </h1>
+            <p class="text-gray-500 text-center">Click any file below to load and play it in the audio player.</p>
+        </header>
+
+        <!-- Dynamic Audio Player Section -->
+        <section class="mb-10 bg-indigo-50 p-4 rounded-lg border border-indigo-200 shadow-inner">
+            <h2 id="current-track-title" class="text-xl font-semibold text-indigo-800 mb-3 truncate">
+                Ready to play...
+            </h2>
+            <audio id="audio-player" controls class="w-full rounded-lg shadow-md" preload="auto">
+                Your browser does not support the audio element.
+            </audio>
+            <!-- Optional feedback message -->
+            <div id="feedback-message" class="text-sm text-red-600 mt-2 hidden">
+                Note: MP3 files must be hosted/available at the same location as this page to load correctly.
+            </div>
+        </section>
+
+        <!-- File List Section -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Available Files</h2>
+            <ul id="track-list" class="space-y-3">
+                <!-- Track items will be dynamically added here by JavaScript -->
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // Array of tracks based on the file names provided by the user
+        const tracks = [
+            // Titles are now just the file names, without the prefix "Track"
+{ file: '1FAX2TRN.mp3', title: '1FAX2TRN.mp3' },
+{ file: '1V2F3T.mp3', title: '1V2F3T.mp3' },
+{ file: '1VM2FAX.mp3', title: '1VM2FAX.mp3' },
+{ file: '26002.mp3', title: '26002.mp3' },
+{ file: '26003.mp3', title: '26003.mp3' },
+{ file: '26004.mp3', title: '26004.mp3' },
+{ file: '26006.mp3', title: '26006.mp3' },
+{ file: '2600.mp3', title: '2600.mp3' },
+{ file: 'ACCEPTCL.mp3', title: 'ACCEPTCL.mp3' },
+{ file: 'AFTRNOON.mp3', title: 'AFTRNOON.mp3' },
+{ file: 'ALT2600.mp3', title: 'ALT2600.mp3' },
+{ file: 'ALT2626.mp3', title: 'ALT2626.mp3' },
+{ file: 'ANNOUNCE.mp3', title: 'ANNOUNCE.mp3' },
+{ file: 'ARCHFRM.mp3', title: 'ARCHFRM.mp3' },
+{ file: 'ARCHNG.mp3', title: 'ARCHNG.mp3' },
+{ file: 'ARCHOPTS.mp3', title: 'ARCHOPTS.mp3' },
+{ file: 'ARCNFRM.mp3', title: 'ARCNFRM.mp3' },
+{ file: 'ARMSGIS.mp3', title: 'ARMSGIS.mp3' },
+{ file: 'BADFAX.mp3', title: 'BADFAX.mp3' },
+{ file: 'BADPASS.mp3', title: 'BADPASS.mp3' },
+{ file: 'BBSINFO.mp3', title: 'BBSINFO.mp3' },
+{ file: 'BBS.mp3', title: 'BBS.mp3' },
+{ file: 'BERNIES.mp3', title: 'BERNIES.mp3' },
+{ file: 'BILLION.mp3', title: 'BILLION.mp3' },
+{ file: 'BOARD1.mp3', title: 'BOARD1.mp3' },
+{ file: 'BOARD2.mp3', title: 'BOARD2.mp3' },
+{ file: 'BOARD3.mp3', title: 'BOARD3.mp3' },
+{ file: 'BRDADMIN.mp3', title: 'BRDADMIN.mp3' },
+{ file: 'BRDINST.mp3', title: 'BRDINST.mp3' },
+{ file: 'BRDMAIN.mp3', title: 'BRDMAIN.mp3' },
+{ file: 'BRDOPTS.mp3', title: 'BRDOPTS.mp3' },
+{ file: 'CANCELED.mp3', title: 'CANCELED.mp3' },
+{ file: 'CNFNEWPW.mp3', title: 'CNFNEWPW.mp3' },
+{ file: 'COMINFO.mp3', title: 'COMINFO.mp3' },
+{ file: 'COM.mp3', title: 'COM.mp3' },
+{ file: 'CORRECT.mp3', title: 'CORRECT.mp3' },
+{ file: 'DECODER.mp3', title: 'DECODER.mp3' },
+{ file: 'DEFNAM.mp3', title: 'DEFNAM.mp3' },
+{ file: 'DELETED.mp3', title: 'DELETED.mp3' },
+{ file: 'DTRANREQ.mp3', title: 'DTRANREQ.mp3' },
+{ file: 'EDITDEPT.mp3', title: 'EDITDEPT.mp3' },
+{ file: 'EDITOR.mp3', title: 'EDITOR.mp3' },
+{ file: 'EMMANUEL.mp3', title: 'EMMANUEL.mp3' },
+{ file: 'ENDSESS.mp3', title: 'ENDSESS.mp3' },
+{ file: 'ENTERCAT.mp3', title: 'ENTERCAT.mp3' },
+{ file: 'ENTERED.mp3', title: 'ENTERED.mp3' },
+{ file: 'ENTERPAS.mp3', title: 'ENTERPAS.mp3' },
+{ file: 'ENTFWD.mp3', title: 'ENTFWD.mp3' },
+{ file: 'ENTNEWPW.mp3', title: 'ENTNEWPW.mp3' },
+{ file: 'ENTPAGER.mp3', title: 'ENTPAGER.mp3' },
+{ file: 'ENTRXTEN.mp3', title: 'ENTRXTEN.mp3' },
+{ file: 'EVENING.mp3', title: 'EVENING.mp3' },
+{ file: 'FINGER.mp3', title: 'FINGER.mp3' },
+{ file: 'FINGMENU.mp3', title: 'FINGMENU.mp3' },
+{ file: 'FOREIGN.mp3', title: 'FOREIGN.mp3' },
+{ file: 'FOR.mp3', title: 'FOR.mp3' },
+{ file: 'FROM.mp3', title: 'FROM.mp3' },
+{ file: 'FUTURE.mp3', title: 'FUTURE.mp3' },
+{ file: 'FWDCANC.mp3', title: 'FWDCANC.mp3' },
+{ file: 'FWDCHNGD.mp3', title: 'FWDCHNGD.mp3' },
+{ file: 'FWDCNFRM.mp3', title: 'FWDCNFRM.mp3' },
+{ file: 'FWDDIS.mp3', title: 'FWDDIS.mp3' },
+{ file: 'FWDMSG2B.mp3', title: 'FWDMSG2B.mp3' },
+{ file: 'FWDOFF.mp3', title: 'FWDOFF.mp3' },
+{ file: 'FWDOK.mp3', title: 'FWDOK.mp3' },
+{ file: 'FWDON.mp3', title: 'FWDON.mp3' },
+{ file: 'FWDOPTS.mp3', title: 'FWDOPTS.mp3' },
+{ file: 'FWDTOWHO.mp3', title: 'FWDTOWHO.mp3' },
+{ file: 'GETCAT.mp3', title: 'GETCAT.mp3' },
+{ file: 'GETCATRA.mp3', title: 'GETCATRA.mp3' },
+{ file: 'GMOPT.mp3', title: 'GMOPT.mp3' },
+{ file: 'GOODBYE.mp3', title: 'GOODBYE.mp3' },
+{ file: 'GOTOINST.mp3', title: 'GOTOINST.mp3' },
+{ file: 'GREETING.mp3', title: 'GREETING.mp3' },
+{ file: 'GREETIS.mp3', title: 'GREETIS.mp3' },
+{ file: 'HEARDMAX.mp3', title: 'HEARDMAX.mp3' },
+{ file: 'HUNDRED.mp3', title: 'HUNDRED.mp3' },
+{ file: 'IHAVMSG.mp3', title: 'IHAVMSG.mp3' },
+{ file: 'INFGROPT.mp3', title: 'INFGROPT.mp3' },
+{ file: 'INITOPTS.mp3', title: 'INITOPTS.mp3' },
+{ file: 'INREMOPS.mp3', title: 'INREMOPS.mp3' },
+{ file: 'INVALCAT.mp3', title: 'INVALCAT.mp3' },
+{ file: 'INVALID.mp3', title: 'INVALID.mp3' },
+{ file: 'INVALUSE.mp3', title: 'INVALUSE.mp3' },
+{ file: 'INVLDOPT.mp3', title: 'INVLDOPT.mp3' },
+{ file: 'ISFAX.mp3', title: 'ISFAX.mp3' },
+{ file: 'KNOWNUM.mp3', title: 'KNOWNUM.mp3' },
+{ file: 'LEAVEMSG.mp3', title: 'LEAVEMSG.mp3' },
+{ file: 'M26002.mp3', title: 'M26002.mp3' },
+{ file: 'M26262.mp3', title: 'M26262.mp3' },
+{ file: 'MAILBOX.mp3', title: 'MAILBOX.mp3' },
+{ file: 'MAIN2600.mp3', title: 'MAIN2600.mp3' },
+{ file: 'MAIN2626.mp3', title: 'MAIN2626.mp3' },
+{ file: 'MEETING.mp3', title: 'MEETING.mp3' },
+{ file: 'MESSAGE.mp3', title: 'MESSAGE.mp3' },
+{ file: 'MESSAGES.mp3', title: 'MESSAGES.mp3' },
+{ file: 'MILLION.mp3', title: 'MILLION.mp3' },
+{ file: 'MONTH01.mp3', title: 'MONTH01.mp3' },
+{ file: 'MONTH02.mp3', title: 'MONTH02.mp3' },
+{ file: 'MONTH03.mp3', title: 'MONTH03.mp3' },
+{ file: 'MONTH04.mp3', title: 'MONTH04.mp3' },
+{ file: 'MONTH05.mp3', title: 'MONTH05.mp3' },
+{ file: 'MONTH06.mp3', title: 'MONTH06.mp3' },
+{ file: 'MONTH07.mp3', title: 'MONTH07.mp3' },
+{ file: 'MONTH08.mp3', title: 'MONTH08.mp3' },
+{ file: 'MONTH09.mp3', title: 'MONTH09.mp3' },
+{ file: 'MONTH10.mp3', title: 'MONTH10.mp3' },
+{ file: 'MONTH11.mp3', title: 'MONTH11.mp3' },
+{ file: 'MONTH12.mp3', title: 'MONTH12.mp3' },
+{ file: 'MORENAMS.mp3', title: 'MORENAMS.mp3' },
+{ file: 'MORNING.mp3', title: 'MORNING.mp3' },
+{ file: 'MOV2NEXT.mp3', title: 'MOV2NEXT.mp3' },
+{ file: 'MTG.mp3', title: 'MTG.mp3' },
+{ file: 'MYNAME.mp3', title: 'MYNAME.mp3' },
+{ file: 'NAMOPT.mp3', title: 'NAMOPT.mp3' },
+{ file: 'NEWGREET.mp3', title: 'NEWGREET.mp3' },
+{ file: 'NEW.mp3', title: 'NEW.mp3' },
+{ file: 'NEWMSG.mp3', title: 'NEWMSG.mp3' },
+{ file: 'NEWMSGS.mp3', title: 'NEWMSGS.mp3' },
+{ file: 'NOCAT.mp3', title: 'NOCAT.mp3' },
+{ file: 'NOFILE.mp3', title: 'NOFILE.mp3' },
+{ file: 'NOFWDNUM.mp3', title: 'NOFWDNUM.mp3' },
+{ file: 'NOMATCH.mp3', title: 'NOMATCH.mp3' },
+{ file: 'NOMORE.mp3', title: 'NOMORE.mp3' },
+{ file: 'NO.mp3', title: 'NO.mp3' },
+{ file: 'NONAME.mp3', title: 'NONAME.mp3' },
+{ file: 'NORLATER.mp3', title: 'NORLATER.mp3' },
+{ file: 'NOTTIME.mp3', title: 'NOTTIME.mp3' },
+{ file: 'NUM00.mp3', title: 'NUM00.mp3' },
+{ file: 'NUM01.mp3', title: 'NUM01.mp3' },
+{ file: 'NUM02.mp3', title: 'NUM02.mp3' },
+{ file: 'NUM03.mp3', title: 'NUM03.mp3' },
+{ file: 'NUM04.mp3', title: 'NUM04.mp3' },
+{ file: 'NUM05.mp3', title: 'NUM05.mp3' },
+{ file: 'NUM06.mp3', title: 'NUM06.mp3' },
+{ file: 'NUM07.mp3', title: 'NUM07.mp3' },
+{ file: 'NUM08.mp3', title: 'NUM08.mp3' },
+{ file: 'NUM09.mp3', title: 'NUM09.mp3' },
+{ file: 'NUM0A.mp3', title: 'NUM0A.mp3' },
+{ file: 'NUM0B.mp3', title: 'NUM0B.mp3' },
+{ file: 'NUM0C.mp3', title: 'NUM0C.mp3' },
+{ file: 'NUM0D.mp3', title: 'NUM0D.mp3' },
+{ file: 'NUM10.mp3', title: 'NUM10.mp3' },
+{ file: 'NUM11.mp3', title: 'NUM11.mp3' },
+{ file: 'NUM12.mp3', title: 'NUM12.mp3' },
+{ file: 'NUM13.mp3', title: 'NUM13.mp3' },
+{ file: 'NUM14.mp3', title: 'NUM14.mp3' },
+{ file: 'NUM15.mp3', title: 'NUM15.mp3' },
+{ file: 'NUM16.mp3', title: 'NUM16.mp3' },
+{ file: 'NUM17.mp3', title: 'NUM17.mp3' },
+{ file: 'NUM18.mp3', title: 'NUM18.mp3' },
+{ file: 'NUM19.mp3', title: 'NUM19.mp3' },
+{ file: 'NUM20.mp3', title: 'NUM20.mp3' },
+{ file: 'NUM30.mp3', title: 'NUM30.mp3' },
+{ file: 'NUM40.mp3', title: 'NUM40.mp3' },
+{ file: 'NUM50.mp3', title: 'NUM50.mp3' },
+{ file: 'NUM60.mp3', title: 'NUM60.mp3' },
+{ file: 'NUM70.mp3', title: 'NUM70.mp3' },
+{ file: 'NUM80.mp3', title: 'NUM80.mp3' },
+{ file: 'NUM90.mp3', title: 'NUM90.mp3' },
+{ file: 'OFFTHEHK.mp3', title: 'OFFTHEHK.mp3' },
+{ file: 'OH.mp3', title: 'OH.mp3' },
+{ file: 'OLD.mp3', title: 'OLD.mp3' },
+{ file: 'OLDMSG.mp3', title: 'OLDMSG.mp3' },
+{ file: 'OLDMSGS.mp3', title: 'OLDMSGS.mp3' },
+{ file: 'OTHOPTS.mp3', title: 'OTHOPTS.mp3' },
+{ file: 'OUTAREA.mp3', title: 'OUTAREA.mp3' },
+{ file: 'PAGCHNGD.mp3', title: 'PAGCHNGD.mp3' },
+{ file: 'PAGEDIS.mp3', title: 'PAGEDIS.mp3' },
+{ file: 'PAGOFF.mp3', title: 'PAGOFF.mp3' },
+{ file: 'PAGON.mp3', title: 'PAGON.mp3' },
+{ file: 'PAGOPTS.mp3', title: 'PAGOPTS.mp3' },
+{ file: 'PCHANGED.mp3', title: 'PCHANGED.mp3' },
+{ file: 'PHONESRV.mp3', title: 'PHONESRV.mp3' },
+{ file: 'POSTINST.mp3', title: 'POSTINST.mp3' },
+{ file: 'POUND.mp3', title: 'POUND.mp3' },
+{ file: 'PRE2626.mp3', title: 'PRE2626.mp3' },
+{ file: 'PRESS.mp3', title: 'PRESS.mp3' },
+{ file: 'PRISON.mp3', title: 'PRISON.mp3' },
+{ file: 'PRIVATE.mp3', title: 'PRIVATE.mp3' },
+{ file: 'PROCFING.mp3', title: 'PROCFING.mp3' },
+{ file: 'QMENU.mp3', title: 'QMENU.mp3' },
+{ file: 'QUERYFAX.mp3', title: 'QUERYFAX.mp3' },
+{ file: 'QUES.mp3', title: 'QUES.mp3' },
+{ file: 'RECGREET.mp3', title: 'RECGREET.mp3' },
+{ file: 'RECNOWP.mp3', title: 'RECNOWP.mp3' },
+{ file: 'REMOOPTS.mp3', title: 'REMOOPTS.mp3' },
+{ file: 'REMUPOPT.mp3', title: 'REMUPOPT.mp3' },
+{ file: 'REPLY.mp3', title: 'REPLY.mp3' },
+{ file: 'REREC.mp3', title: 'REREC.mp3' },
+{ file: 'RESP.mp3', title: 'RESP.mp3' },
+{ file: 'RETEXCED.mp3', title: 'RETEXCED.mp3' },
+{ file: 'SAVED.mp3', title: 'SAVED.mp3' },
+{ file: 'SAYNAME.mp3', title: 'SAYNAME.mp3' },
+{ file: 'SCREEN.mp3', title: 'SCREEN.mp3' },
+{ file: 'SELECT.mp3', title: 'SELECT.mp3' },
+{ file: 'SENDNOW.mp3', title: 'SENDNOW.mp3' },
+{ file: 'STAR.mp3', title: 'STAR.mp3' },
+{ file: 'SUBINFO.mp3', title: 'SUBINFO.mp3' },
+{ file: 'SUBPRE.mp3', title: 'SUBPRE.mp3' },
+{ file: 'SUBPROB.mp3', title: 'SUBPROB.mp3' },
+{ file: 'SUBS.mp3', title: 'SUBS.mp3' },
+{ file: 'TDOFF.mp3', title: 'TDOFF.mp3' },
+{ file: 'TDON.mp3', title: 'TDON.mp3' },
+{ file: 'TEMP.mp3', title: 'TEMP.mp3' },
+{ file: 'THOUSAND.mp3', title: 'THOUSAND.mp3' },
+{ file: 'TOOMANY.mp3', title: 'TOOMANY.mp3' },
+{ file: 'TOREACH.mp3', title: 'TOREACH.mp3' },
+{ file: 'TRILLION.mp3', title: 'TRILLION.mp3' },
+{ file: 'TUTORIAL.mp3', title: 'TUTORIAL.mp3' },
+{ file: 'USEBOX.mp3', title: 'USEBOX.mp3' },
+{ file: 'USERBOX.mp3', title: 'USERBOX.mp3' },
+{ file: 'USEROPT2.mp3', title: 'USEROPT2.mp3' },
+{ file: 'USEROPTS.mp3', title: 'USEROPTS.mp3' },
+{ file: 'VCBBS.mp3', title: 'VCBBS.mp3' },
+{ file: 'VCFILES.mp3', title: 'VCFILES.mp3' },
+{ file: 'VMYOUHAV.mp3', title: 'VMYOUHAV.mp3' },
+{ file: 'VOXAM.mp3', title: 'VOXAM.mp3' },
+{ file: 'VOXPM.mp3', title: 'VOXPM.mp3' },
+{ file: 'WBAI.mp3', title: 'WBAI.mp3' },
+{ file: 'WHATNUM.mp3', title: 'WHATNUM.mp3' },
+{ file: 'YOURBOX.mp3', title: 'YOURBOX.mp3' },
+{ file: 'YOURECD.mp3', title: 'YOURECD.mp3' },
+{ file: 'YOURPAS.mp3', title: 'YOURPAS.mp3' },
+{ file: 'ZERO.mp3', title: 'ZERO.mp3' }
+          ];
+
+        const audioPlayer = document.getElementById('audio-player');
+        const trackList = document.getElementById('track-list');
+        const currentTrackTitle = document.getElementById('current-track-title');
+
+        /**
+         * Loads a track into the audio player and attempts to play it.
+         * @param {string} file - The filename (URL) of the MP3.
+         * @param {string} title - The display title of the track.
+         */
+        function loadTrack(file, title) {
+            audioPlayer.src = file;
+            currentTrackTitle.textContent = `Now Playing: ${title}`;
+            
+            // Attempt to play the audio. This might be blocked by browser policies
+            // (e.g., no autoplay before user interaction).
+            audioPlayer.play().catch(error => {
+                console.error("Autoplay failed:", error);
+                // If autoplay fails, the user will still see the controls to press play.
+                currentTrackTitle.textContent = `Loaded: ${title} (Click Play Above)`;
+            });
+        }
+
+        /**
+         * Renders the list of tracks to the DOM.
+         */
+        function renderTrackList() {
+            // Clear any previous list items (useful if this function was called multiple times)
+            trackList.innerHTML = '';
+            
+            tracks.forEach(track => {
+                const listItem = document.createElement('li');
+                // Tailwind classes for styling, responsiveness, and hover effect
+                listItem.className = 'track-item cursor-pointer bg-gray-50 p-4 rounded-lg flex justify-between items-center transition duration-200 ease-in-out hover:bg-indigo-100 hover:shadow-md';
+                
+                // Set the list item content
+                listItem.innerHTML = `
+                    <span class="text-lg font-medium text-gray-700 truncate pr-4">${track.title}</span>
+                    <!-- Removed the redundant file name span since title is now the file name -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500 flex-shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75v4.5m-4.5-4.5v4.5m8.25-2.25l-1.5-.75L12 9l2.25-1.5 1.5.75L18 10.5l-2.25 1.5z" />
+                    </svg>
+                `;
+                
+                // Add the click listener to load and play the track
+                listItem.addEventListener('click', () => loadTrack(track.file, track.title));
+                
+                trackList.appendChild(listItem);
+            });
+
+            // Set a default state message when the list is rendered
+            currentTrackTitle.textContent = `Available Files: ${tracks.length}`;
+        }
+
+        // Initialize the list when the page finishes loading
+        window.onload = renderTrackList;
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio File Player</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the track list item hover effect */
+        .track-item:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 font-sans">
+    <div class="max-w-3xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="mb-8">
+            <!-- Updated and Centered Title -->
+            <h1 class="text-3xl font-extrabold text-indigo-700 border-b-4 border-indigo-200 pb-2 mb-2 text-center">
+                2600 Voice BBS - 2005
+            </h1>
+            <p class="text-gray-500 text-center">Click any file below to load and play it in the audio player.</p>
+        </header>
+
+        <!-- Dynamic Audio Player Section -->
+        <section class="mb-10 bg-indigo-50 p-4 rounded-lg border border-indigo-200 shadow-inner">
+            <h2 id="current-track-title" class="text-xl font-semibold text-indigo-800 mb-3 truncate">
+                Ready to play...
+            </h2>
+            <audio id="audio-player" controls class="w-full rounded-lg shadow-md" preload="auto">
+                Your browser does not support the audio element.
+            </audio>
+            <!-- Optional feedback message -->
+            <div id="feedback-message" class="text-sm text-red-600 mt-2 hidden">
+                Note: MP3 files must be hosted/available at the same location as this page to load correctly.
+            </div>
+        </section>
+
+        <!-- File List Section -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Available Files</h2>
+            <ul id="track-list" class="space-y-3">
+                <!-- Track items will be dynamically added here by JavaScript -->
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // Array of tracks based on the file names provided by the user
+        const tracks = [
+            // Titles are now just the file names, without the prefix "Track"
+            { file: 'M13817.mp3', title: 'M13817.mp3' },
+            { file: 'M13844.mp3', title: 'M13844.mp3' },
+            { file: 'M13867.mp3', title: 'M13867.mp3' },
+            { file: 'M13882.mp3', title: 'M13882.mp3' },
+            { file: 'M13901.mp3', title: 'M13901.mp3' },
+            { file: 'M13934.mp3', title: 'M13934.mp3' },
+            { file: 'M13946.mp3', title: 'M13946.mp3' },
+            { file: 'M13951.mp3', title: 'M13951.mp3' },
+            { file: 'M13962.mp3', title: 'M13962.mp3' },
+            { file: 'M14002.mp3', title: 'M14002.mp3' }
+        ];
+
+        const audioPlayer = document.getElementById('audio-player');
+        const trackList = document.getElementById('track-list');
+        const currentTrackTitle = document.getElementById('current-track-title');
+
+        /**
+         * Loads a track into the audio player and attempts to play it.
+         * @param {string} file - The filename (URL) of the MP3.
+         * @param {string} title - The display title of the track.
+         */
+        function loadTrack(file, title) {
+            audioPlayer.src = file;
+            currentTrackTitle.textContent = `Now Playing: ${title}`;
+            
+            // Attempt to play the audio. This might be blocked by browser policies
+            // (e.g., no autoplay before user interaction).
+            audioPlayer.play().catch(error => {
+                console.error("Autoplay failed:", error);
+                // If autoplay fails, the user will still see the controls to press play.
+                currentTrackTitle.textContent = `Loaded: ${title} (Click Play Above)`;
+            });
+        }
+
+        /**
+         * Renders the list of tracks to the DOM.
+         */
+        function renderTrackList() {
+            // Clear any previous list items (useful if this function was called multiple times)
+            trackList.innerHTML = '';
+            
+            tracks.forEach(track => {
+                const listItem = document.createElement('li');
+                // Tailwind classes for styling, responsiveness, and hover effect
+                listItem.className = 'track-item cursor-pointer bg-gray-50 p-4 rounded-lg flex justify-between items-center transition duration-200 ease-in-out hover:bg-indigo-100 hover:shadow-md';
+                
+                // Set the list item content
+                listItem.innerHTML = `
+                    <span class="text-lg font-medium text-gray-700 truncate pr-4">${track.title}</span>
+                    <!-- Removed the redundant file name span since title is now the file name -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500 flex-shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75v4.5m-4.5-4.5v4.5m8.25-2.25l-1.5-.75L12 9l2.25-1.5 1.5.75L18 10.5l-2.25 1.5z" />
+                    </svg>
+                `;
+                
+                // Add the click listener to load and play the track
+                listItem.addEventListener('click', () => loadTrack(track.file, track.title));
+                
+                trackList.appendChild(listItem);
+            });
+
+            // Set a default state message when the list is rendered
+            currentTrackTitle.textContent = `Available Files: ${tracks.length}`;
+        }
+
+        // Initialize the list when the page finishes loading
+        window.onload = renderTrackList;
+
+    </script>
+</body>
+</html>
